@@ -32,7 +32,8 @@ enable_service() {
     echo "${service} is already enabled"
   else
     echo "Enabling ${service}"
-    systemctl enable --now "${service}"
+    systemctl enable "${service}"
+    systemctl start "${service}"
   fi
 }
 
