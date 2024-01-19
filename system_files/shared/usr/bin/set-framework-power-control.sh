@@ -11,24 +11,28 @@ CPU_VENDOR=$(lshw -json -class CPU | jq -r ".[].vendor")
 disable_service() {
   service="$1"
 
-  if systemctl is-enabled ${service}; then
+  if systemctl is-enabled "${service}"; then
     echo "Disabling ${service}"
-    systemctl stop ${service}
     systemctl disable "${service}"
   else
     echo "${service} is not enabled"
   fi
+
+  if systemctl is-active "${service}"; then
+    echo "Stopping active service ${service}"
+    systemctl stop "${service}"
+  fi
+  
 }
 
 enable_service() {
-  service=$1
+  service="$1"
 
-  if systemctl is-enabled ${service}; then
+  if systemctl is-enabled "${service}"; then
     echo "${service} is already enabled"
   else
     echo "Enabling ${service}"
-    systemctl enable "${service}"
-    systemctl start "${service}"
+    systemctl enable --now "${service}"
   fi
 }
 
