@@ -29,12 +29,12 @@ enable_service() {
     systemctl unmask "${service}"
   fi
 
-  echo "Before conditional check, if ${service} is enabled"
-  if systemctl is-enabled "${service}"; then
-    echo "${service} is already enabled"
-  else
+  query=$(systemctl is-enabled "${service}")  
+  if [[ "${query}" == "disabled" ]]; then
     echo "Enabling ${service}"
     systemctl enable "${service}"
+  else
+    echo "${service} is already enabled"
   fi
 }
 
