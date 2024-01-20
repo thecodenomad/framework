@@ -6,4 +6,4 @@ Type=oneshot
 ExecStart=/usr/bin/set-framework-power-control.sh
 
 [Install]
-WantedBy=runlevel1.target
+WantedBy=multi-user.target
