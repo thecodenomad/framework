@@ -8,39 +8,39 @@ TLP="tlp"
 
 CPU_VENDOR=$(lshw -json -class CPU | jq -r ".[].vendor")
 
-disable_service() {
+mask_service() {
   service="$1"
+  query=$(systemctl is-enabled "${service}")
 
-  if systemctl is-enabled "${service}"; then
-    echo "Disabling ${service}"
-    systemctl disable --now "${service}"
+  if [[ "${query}" == "masked" ]]; then
+    echo "Service ${service} is masked"
   else
-    echo "${service} is not enabled"
-  fi
-
-  if systemctl is-active "${service}"; then
-    echo "Stopping active service ${service}"
-    systemctl stop "${service}"
-  fi
-  
+    echo "Masking ${service}"  
+    systemctl mask "${service}"
+  fi  
 }
 
 enable_service() {
   service="$1"
+  query=$(systemctl is-enabled "${service}")
+
+  if [[ "${query}" == "masked" ]]; then
+    systemctl unmask "${service}"
+  fi
 
   if systemctl is-enabled "${service}"; then
     echo "${service} is already enabled"
   else
     echo "Enabling ${service}"
-    systemctl enable --now "${service}"
+    systemctl enable "${service}"
   fi
 }
 
 if [[ "${CPU_VENDOR^^}" =~ "AMD" ]]; then
-    disable_service "${TLP}"
+    mask_service "${TLP}"
     enable_service "${PPD}"
 elif [[ "${CPU_VENDOR^^}" =~ "INTEL" ]]; then
-    disable_service "${PPD}"
+    mask_service "${PPD}"
     enable_service "${TLP}"
 fi
 
