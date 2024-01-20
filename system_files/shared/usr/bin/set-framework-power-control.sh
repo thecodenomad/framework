@@ -36,10 +36,10 @@ enable_service() {
   fi
 }
 
-if [[ "${CPU_VENDOR^^}" =~ "AMD" ]]; then
+if [[ "${CPU_VENDOR^^}" =~ .*"AMD".* ]]; then
     mask_service "${TLP}"
     enable_service "${PPD}"
-elif [[ "${CPU_VENDOR^^}" =~ "INTEL" ]]; then
+elif [[ "${CPU_VENDOR^^}" =~ .*"INTEL".* ]]; then
     mask_service "${PPD}"
     enable_service "${TLP}"
 fi
