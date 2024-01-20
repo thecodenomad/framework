@@ -13,7 +13,7 @@ disable_service() {
 
   if systemctl is-enabled "${service}"; then
     echo "Disabling ${service}"
-    systemctl disable "${service}"
+    systemctl disable --now "${service}"
   else
     echo "${service} is not enabled"
   fi
@@ -32,8 +32,7 @@ enable_service() {
     echo "${service} is already enabled"
   else
     echo "Enabling ${service}"
-    systemctl enable "${service}"
-    systemctl start "${service}"
+    systemctl enable --now "${service}"
   fi
 }
 
